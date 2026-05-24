@@ -5,6 +5,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 struct Student {
 	int id;
@@ -67,6 +68,37 @@ std::string get_str_input(const std::string &prompt) {
   return input;
 }
 
+void swap(Student &a, Student &b) {
+    Student tmp;
+    tmp = a;
+    a=b;
+    b=tmp;
+}
+
+int partition(Student array[], int low, int high) {
+    std::string pivot = array[high].NIM; 
+    int cnt = low-1;
+
+    for(int i=low; i<high; i++) {
+        if(array[i].NIM < pivot) {
+            cnt++;
+            swap(array[i], array[cnt]);
+        }
+    }
+
+    swap(array[cnt+1], array[high]);
+    return cnt+1;
+}
+
+void quickSort_by_nim(Student array[], int low, int high) {
+    if(low<high) {
+        int p = partition(array, low, high);
+
+        quickSort_by_nim(array, low, p-1);
+        quickSort_by_nim(array, p+1, high);
+    }
+}
+
 void sort_by_nim(Student array[], size_t size){
 	Student temp;
 
@@ -81,16 +113,90 @@ void sort_by_nim(Student array[], size_t size){
 	}
 }
 
+int digits(int x) {
+    int ans = 0;
+    if(x==0) {
+        return 1;
+    }
+    while(x>0) {
+        ans++;
+        x = x/10;
+    }
+    return ans;
+}
+
+void coout(char c, int x) {
+    if(x < 0) {
+        x=0;
+    }
+    for(int i=0; i<x; i++) {
+        std :: cout << c;
+    }
+}
+
+int maxStudentName(Student s[], int studentSize) {
+  int x=4;
+  for(int i=0; i<studentSize; i++) {
+      int length = s[i].name.length();
+      if(x<length) {
+          x = length;
+      }
+  }
+  return x;
+}
+
+int maxEmailName(Student s[], int studentSize) {
+  int x=5;
+  for(int i=0; i<studentSize; i++) {
+      int length = s[i].email.length();
+      if(x<length) {
+          x = length;
+      }
+  }
+  return x;
+}
+
+int maxID(Student s[], int studentSize) {
+  int x = 2;
+  for(int i=0; i<studentSize; i++) {
+    if(x<s[i].id) {
+      x=s[i].id;
+    }
+  }
+  return x;
+}
+
+int maxStudentNim(Student s[], int studentSize) {
+  int x=3;
+  for(int i=0; i<studentSize; i++) {
+      int length = s[i].NIM.length();
+      if(x<length) {
+          x = length;
+      }
+  }
+  return x;
+}
+
 void print_students(Student students[], size_t size) {
-	std::cout << "ID\t|\tName\t|\tEmail\t\t|\tNIM\n";
+  int maxid = maxID(students, (int)size) +1;
+  int maxName = maxStudentName(students, (int)size)+1;
+  int maxEmail = maxEmailName(students, int(size))+1;
+  int maxNim = maxStudentNim(students, int(size))+1;
+
+	std::cout << "ID"; coout(' ', std::max(0,maxid-2));
+  std::cout << "|Name"; coout(' ', std::max(0,maxName-4));
+  std::cout << "|Email"; coout(' ', std::max(0,maxEmail-5));
+  std::cout << "|NIM"; coout(' ', std::max(0,maxNim-3));
+  std::cout << "\n";
 
 	for (size_t i = 0; i < size; i++) {
     auto student = students[i];
 
-    std::cout << student.id << "\t ";
-    std::cout << student.name << "\t\t ";
-    std::cout << student.email << "\t ";
-    std::cout << student.NIM << "\n";
+    std::cout << student.id; coout(' ', maxid-digits(student.id)+1);
+    std::cout << student.name; coout(' ', maxName-student.name.length()+1);
+    std::cout << student.email; coout(' ', maxEmail-student.email.length()+1);
+    std::cout << student.NIM; coout(' ', maxNim-student.email.length());
+    std::cout << "\n";
   }
 }
 
@@ -223,7 +329,8 @@ int main () {
                 temp[i] = students[i];
               }
                 
-              sort_by_nim(temp, students_size);
+              //sort_by_nim(temp, students_size);
+              quickSort_by_nim(temp, 0, (int)students_size - 1);
 
               std::cout << "Displaying Student Data Sorted by NIM:\n";
               print_students(temp, students_size);
@@ -272,6 +379,11 @@ int main () {
 			}
 
 			case 3: {
+        if (students_size == 0){
+					std::cout << "No Student Data Found" << "\n\n";
+          break;
+				}
+
 				std::cout << "Update student" << "\n";
 
         print_students(students, students_size);
@@ -302,16 +414,20 @@ int main () {
 
         write_students_to_csv(students, students_size);
 
-        std::cout << "successfully updated student!";
+        std::cout << "successfully updated student!\n";
 				break;
 			}
 
 			case 4: {
+        if (students_size == 0){
+					std::cout << "No Student Data Found" << "\n\n";
+          break;
+				}
+
 				std::cout << "Delete student" << "\n";
         print_students(students, students_size);
-        std::cout << "choose student to delete (id): ";
 
-        int target_id = get_int_input( "input id of student to update: ");
+        int target_id = get_int_input( "choose student to delete (id): ");
 
         delete_student(students, students_size, target_id);
         write_students_to_csv(students, students_size);
