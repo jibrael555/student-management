@@ -4,10 +4,10 @@ materi yang diimplementasi
 
 - [x] array ()
 - [x] struct
-- [x] pointer
-- [x] searching (binary, sequential)
-- [x] sorting (bubble sort)
-- [x] recursion (diimplementasi di sort)
+- [x] pointer, implemented in search
+- [x] searching (binary, sequential) implemented in delete student
+- [x] sorting (bubble sort) implemented in list student
+- [x] recursion, implemented in sort
 
 fitur:
 

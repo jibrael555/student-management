@@ -329,7 +329,6 @@ int main () {
                 temp[i] = students[i];
               }
                 
-              //sort_by_nim(temp, students_size);
               quickSort_by_nim(temp, 0, (int)students_size - 1);
 
               std::cout << "Displaying Student Data Sorted by NIM:\n";
@@ -365,9 +364,7 @@ int main () {
 				student.email = get_str_input("email: ");
         student.NIM = get_str_input("student NIM: ");
 
-        std::cout << "before this?\n";
 				students[students_size] = student;
-        std::cout << "after this.\n";
 
 				students_size++;
 
@@ -390,6 +387,12 @@ int main () {
 
         int target_id = get_int_input( "input id of student to update: ");
         Student* student = find_students(students, students_size, target_id);
+        
+        if (student == NULL) {
+          std::cout << "no student with id " << target_id << " found.\n";
+          continue;
+        }
+
         std::string tmp = get_str_input("input student new name (leave empty to keep): ");
 
         if(!tmp.empty()) {
@@ -428,6 +431,12 @@ int main () {
         print_students(students, students_size);
 
         int target_id = get_int_input( "choose student to delete (id): ");
+
+        Student* student = find_students(students, students_size, target_id);
+        if (student == NULL) {
+          std::cout << "no student with id " << target_id << " found. No students deleted.\n";
+          continue;
+        }
 
         delete_student(students, students_size, target_id);
         write_students_to_csv(students, students_size);
