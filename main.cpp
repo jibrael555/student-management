@@ -5,7 +5,6 @@
 #include <limits>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 struct Student {
 	int id;
@@ -364,7 +363,12 @@ int main () {
 				student.email = get_str_input("email: ");
         student.NIM = get_str_input("student NIM: ");
 
+        std::cout << "before this?\n";
 				students[students_size] = student;
+<<<<<<< HEAD
+=======
+        std::cout << "after this.\n";
+>>>>>>> 17a80e973c295d7f8e1f5bf4e35b56235e58b3b6
 
 				students_size++;
 
@@ -387,7 +391,7 @@ int main () {
 
         int target_id = get_int_input( "input id of student to update: ");
         Student* student = find_students(students, students_size, target_id);
-        
+                
         if (student == NULL) {
           std::cout << "no student with id " << target_id << " found.\n";
           continue;
@@ -400,6 +404,22 @@ int main () {
         }
 
         tmp.clear();
+
+        tmp = get_str_input("input student new email (leave empty to keep): ");
+        if(!tmp.empty()) {
+          student->email = tmp;
+        }
+
+        tmp.clear();
+
+        tmp = get_str_input("input student new NIM (leave empty to keep): ");
+        if(!tmp.empty()) {
+          student->NIM = tmp;
+        }
+
+        tmp.clear();
+
+        write_students_to_csv(students, students_size);
 
         tmp = get_str_input("input student new email (leave empty to keep): ");
         if(!tmp.empty()) {
